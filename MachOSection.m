@@ -23,7 +23,7 @@ static MachOSection *singleton;
     if (singleton) return singleton;
     if (self = [super init]) {
         Dl_info info;
-        configutation = @"";
+        configuration = @"";
         dladdr((__bridge const void *)configuration, &info);
         machHeader = (struct mach_header *)info.dli_fbase;
     }
@@ -32,8 +32,8 @@ static MachOSection *singleton;
 
 + (instancetype)shareInstance {
     static dispatch_once_t onceToken;
-    dispach_once(&onceToken, ^{
-        singleton = [MachOSection alloc] initForPrivate];
+    dispatch_once(&onceToken, ^{
+        singleton = [[MachOSection alloc] initForPrivate];
     });
     return singleton;
 }
@@ -41,17 +41,17 @@ static MachOSection *singleton;
 - (void)executeFunctionsForKey:(NSString *)key {
     unsigned long byteCount = 0;
     MachOSectionItem *items = (MachOSectionItem *)[self pointersForKey:key getLength:&byteCount];
-    NSUinteger itemCount = byteCount / sizeof(MachOSectionItem);
+    NSUInteger itemCount = byteCount / sizeof(MachOSectionItem);
     if (itemCount == 0) {
       return;
     }
     @autoreleasepool {
-        for (NSUinteger i = 0; i < itemCount; i++) {
+        for (NSUInteger i = 0; i < itemCount; i++) {
             if (items[i].func) {
                 void (*method)(void) = (void (*)(void))items[i].value;
                 if (items[i].autorelease) {
                     @autoreleasepool {
-                        method()
+                        method();
                     }
                 }else {
                     method();
