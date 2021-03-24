@@ -5,6 +5,7 @@ NS_ASSUME_NONNULL_BEGIN
 typedef struct MachOSectionItem {
     void *value;
     bool func;
+    bool autorelease;
     NSString *tag;
 }MachOSectionItem;
 
